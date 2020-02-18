@@ -5,7 +5,8 @@ import threading
 
 inicioPuente = 10
 largoPuente = 20
-semaforoVaca=threading.Semaphore(1)
+semaforoPuente1=threading.Semaphore(1)
+semaforoPuente2=threading.Semaphore(1)
 
 class Vaca(threading.Thread):
   def __init__(self):
@@ -23,12 +24,16 @@ class Vaca(threading.Thread):
   def run(self):
     while(True):
       if self.posicion==9:
-        semaforoVaca.acquire()
+        semaforoPuente1.acquire()
+      if self.posicion==39:
+        semaforoPuente2.acquire()
       try:
         self.avanzar()
       finally:
         if self.posicion==31:
-          semaforoVaca.release()
+            semaforoPuente1.release()
+        if self.posicion==101:
+            semaforoPuente2.release()
         
 
 
@@ -42,7 +47,7 @@ def cls():
   os.system('cls' if os.name=='nt' else 'clear')
 
 def dibujarPuente():
-  print(' ' * inicioPuente + '=' * largoPuente)
+  print(' ' * inicioPuente + '=' * largoPuente + ' ' * inicioPuente + '=' * largoPuente*3)
 
 while(True):
   cls()

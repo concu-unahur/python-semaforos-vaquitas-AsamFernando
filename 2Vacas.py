@@ -5,7 +5,11 @@ import threading
 
 inicioPuente = 10
 largoPuente = 20
-semaforoVaca=threading.Semaphore(1)
+
+semaforoInicioPuente=threading.Semaphore(2)
+#semaforoFinPuente=threading.Semaphore(0)
+vacasCruzaron=0
+cantVacas=8
 
 class Vaca(threading.Thread):
   def __init__(self):
@@ -21,19 +25,23 @@ class Vaca(threading.Thread):
     print(' ' * self.posicion + "🐮")
 
   def run(self):
+    global vacasCruzaron
     while(True):
-      if self.posicion==9:
-        semaforoVaca.acquire()
+      self.avanzar()
       try:
-        self.avanzar()
+        if self.posicion==inicioPuente - 1:
+          semaforoInicioPuente.acquire()
+        elif self.posicion==inicioPuente + largoPuente + 1:
+          vacasCruzaron+=1
       finally:
-        if self.posicion==31:
-          semaforoVaca.release()
-        
+        if vacasCruzaron==2:
+          vacasCruzaron=0
+          for i in range(2):
+            semaforoInicioPuente.release()
 
-
+          
 vacas = []
-for i in range(5):
+for i in range(cantVacas):
   v = Vaca()
   vacas.append(v)
   v.start()
