@@ -5,7 +5,7 @@ import threading
 
 inicioPuente = 10
 largoPuente = 20
-semaforoPuente1=threading.Semaphore(1)
+semaforoPuente1=threading.Semaphore(3)
 semaforoPuente2=threading.Semaphore(1)
 
 
@@ -15,39 +15,40 @@ class Puente:
     self.largo=largoPuente
 
   def dibujoPuente(self):
-    return ' ' * self.inicio + '=' * self.largo
+    return '=' * self.largo
   
   def distanciaAbarca(self):
     return self.inicio + self.largo
 
-listaPuentes=[Puente(10, 20), Puente(10, 40)]
+listaPuentes=[Puente(10, 20), Puente(60, 40)]
 
 '''for i in range(2):
   p=Puente(10, 20)
   listaPuentes.append(p)'''
 
-def inicioDelPuente(nroPuente):
+'''def inicioDelPuente(nroPuente):
   total=listaPuentes[nroPuente].distanciaAbarca()
   for i in range(nroPuente):
     total+=listaPuentes[i].distanciaAbarca()
-  return total - listaPuentes[nroPuente].largo - 1
+  return total - listaPuentes[nroPuente].largo - 1'''
 
 
 class Vaca(threading.Thread):
   def __init__(self):
     super().__init__()
     self.posicion = 0
-    self.velocidad = random.uniform(0.1, 0.5)
+    self.velocidad = random.uniform(0.1, 1)
 
   def avanzar(self):
     time.sleep(self.velocidad)
     self.posicion += 1
 
   def dibujar(self):
-    print(' ' * self.posicion + "🐮")
+    print(' ' * self.posicion + "V")
 
 
   def run(self):
+    puente=0
     while(True):
       if self.posicion==inicioDelPuente(0):
         semaforoPuente1.acquire()
@@ -64,7 +65,7 @@ class Vaca(threading.Thread):
         
 
 vacas = []
-for i in range(5):
+for i in range(10):
   v = Vaca()
   vacas.append(v)
   v.start()
@@ -74,14 +75,16 @@ def cls():
 
 
 def dibujarPuente():
-  todosLosPuentes=''
+  ultimoFin = 0
   for puente in listaPuentes:
-    todosLosPuentes+=puente.dibujoPuente()
-  print(todosLosPuentes)
-
+    print((puente.inicio - ultimoFin) * ' ', end='')
+    print(puente.dibujoPuente(), end='')
+    ultimoFin = puente.distanciaAbarca()
+  print()
+    
 while(True):
   cls()
-  print('Apretá Ctrl + C varias veces para salir...')
+  print('Apreta Ctrl + C varias veces para salir...')
   print()
   dibujarPuente()
   for v in vacas:

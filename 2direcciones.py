@@ -22,9 +22,6 @@ class Puente:
 
 listaPuentes=[Puente(10, 20)]#, Puente(10, 40)]
 
-'''for i in range(2):
-  p=Puente(10, 20)
-  listaPuentes.append(p)'''
 
 def inicioDelPuente(nroPuente):
   total=listaPuentes[nroPuente].distanciaAbarca()
@@ -36,39 +33,39 @@ def inicioDelPuente(nroPuente):
 class Vaca(threading.Thread):
 
     def __init__(self, posicion, avanza):
-        super().__init__()
-        self.posicion = posicion
-        self.velocidad = random.uniform(0.1, 0.5)
-        self.avanza = avanza
+      super().__init__()
+      self.posicion = posicion
+      self.velocidad = random.uniform(0.1, 0.5)
+      self.avanza = avanza
 
     def avanzar(self):
-        time.sleep(self.velocidad)
-        self.posicion += 1
+      time.sleep(self.velocidad)
+      self.posicion += 1
     
     def retroceder(self):
-        time.sleep(self.velocidad)
-        self.posicion-=1
+      time.sleep(self.velocidad)
+      self.posicion-=1
 
     def dibujar(self):
-        print(' ' * self.posicion + "🐮")
+      print(' ' * self.posicion + "🐮")
 
 
     def run(self):
-        while(True):
-            if self.posicion==9 and self.avanza:
-                semaforoPuente1.acquire()
-            if self.posicion==31 and not self.avanza:
-                semaforoPuente1.acquire()
-            try:
-                if self.avanza:
-                    self.avanzar()
-                else:
-                    self.retroceder()
-            finally:
-                if self.posicion==31 and self.avanza:
-                    semaforoPuente1.release()
-                if self.posicion==9 and not self.avanza:
-                    semaforoPuente1.release()
+      while(True):
+        if self.posicion==9 and self.avanza:
+            semaforoPuente1.acquire()
+        if self.posicion==31 and not self.avanza:
+            semaforoPuente1.acquire()
+        try:
+          if self.avanza:
+              self.avanzar()
+          else:
+              self.retroceder()
+        finally:
+          if self.posicion==31 and self.avanza:
+              semaforoPuente1.release()
+          if self.posicion==9 and not self.avanza:
+              semaforoPuente1.release()
         
         
 posiciones=[0, 40, 0, 40, 0]
